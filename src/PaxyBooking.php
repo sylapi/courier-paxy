@@ -32,7 +32,7 @@ class PaxyBooking extends Booking
 
         $data = [
             'shipmentId' => $this->getShipmentId(),
-            'shipmentId' => $this->getTrackingId(),
+            'trackingId' => $this->getTrackingId(),
         ];
 
         $validator = new Validator();
