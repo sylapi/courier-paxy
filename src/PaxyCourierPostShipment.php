@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Sylapi\Courier\Paxy;
 
 use Exception;
-use GuzzleHttp\Exception\ClientException;
+use Sylapi\Courier\Paxy\PaxyBooking;
 use Sylapi\Courier\Contracts\Booking;
-use Sylapi\Courier\Contracts\CourierPostShipment;
-use Sylapi\Courier\Contracts\Response as ResponseContract;
 use Sylapi\Courier\Entities\Response;
-use Sylapi\Courier\Exceptions\TransportException;
+use GuzzleHttp\Exception\ClientException;
 use Sylapi\Courier\Helpers\ResponseHelper;
+use Sylapi\Courier\Contracts\CourierPostShipment;
+use Sylapi\Courier\Exceptions\TransportException;
+use Sylapi\Courier\Contracts\Response as ResponseContract;
 
 class PaxyCourierPostShipment implements CourierPostShipment
 {
@@ -43,6 +44,9 @@ class PaxyCourierPostShipment implements CourierPostShipment
             }
 
             $response->shipmentId = $booking->getShipmentId();
+            /**
+             * @var PaxyBooking $booking
+             */
             $response->trackingId = $booking->getTrackingId();
         } catch (ClientException $e) {
             $exception = new TransportException(PaxyResponseErrorHelper::message($e));
