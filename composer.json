@@ -1,0 +1,39 @@
+{
+    "name": "sylapi/courier-paxy",
+    "type": "library",
+    "description": "Courier",
+    "keywords": [
+        "courier",
+        "paxy",
+        "shipping"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ""
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0",
+        "sylapi/courier": "^2.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "rakit/validation": "^1.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12.77"
+    },
+    "autoload": {
+        "psr-4": { "Sylapi\\Courier\\Paxy\\" : "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Sylapi\\Courier\\Paxy\\Tests\\": "tests/" }
+    },
+    "scripts": {
+        "tests": "vendor/bin/phpunit",
+        "phpstan": "vendor/bin/phpstan analyse src tests",
+        "coverage": "XDEBUG_MODE=coverage  vendor/bin/phpunit --verbose --coverage-text",
+        "coverage-html": "XDEBUG_MODE=coverage  vendor/bin/phpunit --coverage-html ./coverage/"
+    },     
+    "prefer-stable": false
+}
