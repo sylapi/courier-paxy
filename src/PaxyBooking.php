@@ -27,7 +27,7 @@ class PaxyBooking extends Booking
     {
         $rules = [
             'shipmentId'   => 'required',
-            'trackingId'   => 'required',
+            'trackingId'   => 'string',
         ];
 
         $data = [

@@ -7,6 +7,7 @@ namespace Sylapi\Courier\Paxy;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use Sylapi\Courier\Contracts\CourierCreateShipment;
+use Sylapi\Courier\Contracts\CourierPostShipment;
 use Sylapi\Courier\Contracts\Response as ResponseContract;
 use Sylapi\Courier\Contracts\Shipment;
 use Sylapi\Courier\Entities\Response;
@@ -25,21 +26,27 @@ class PaxyCourierCreateShipment implements CourierCreateShipment
         $this->session = $session;
     }
 
-
     public function createShipment(Shipment $shipment): ResponseContract
     {
         $response = new Response();
+
+        $bookNr = null;
+        $trackingNr = null;
 
         try {
             $bookNr = $this->createBook($this->getBook($shipment));
             $response->referenceId = $bookNr;
             $trackingNr = $this->createParcel($this->getParcel($bookNr, $shipment));
             $response->referenceId = $bookNr;
+
             $response->shipmentId = $bookNr;
             $response->trackingId = $trackingNr;
         } catch (ClientException $e) {
             $exception = new TransportException(PaxyResponseErrorHelper::message($e));
             ResponseHelper::pushErrorsToResponse($response, [$exception]);
+            if($bookNr) {
+                $this->closeBook($bookNr);
+            }
             return $response;
         } catch (Exception $e) {
             $exception = new TransportException($e->getMessage(), $e->getCode());
@@ -130,5 +137,13 @@ class PaxyCourierCreateShipment implements CourierCreateShipment
         }
 
         return $data;
+    }
+
+    private function closeBook($bookNr)
+    {
+        $postShipment = new PaxyCourierPostShipment($this->session);
+        $booking = new PaxyBooking;
+        $booking->setShipmentId($bookNr);
+        $postShipment->postShipment($booking);
     }
 }
