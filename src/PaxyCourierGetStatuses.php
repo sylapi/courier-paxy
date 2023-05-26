@@ -48,7 +48,7 @@ class PaxyCourierGetStatuses implements CourierGetStatuses
         
             $status = $result->items[0]->statusCode ?? StatusType::APP_RESPONSE_ERROR;
 
-            return new Status((string) new PaxyStatusTransformer((string) 'created'));
+            return new Status((string) new PaxyStatusTransformer((string) $status));
         } catch (ClientException $e) {
             $exception = new TransportException(PaxyResponseErrorHelper::message($e));
             $status = new Status(StatusType::APP_RESPONSE_ERROR);

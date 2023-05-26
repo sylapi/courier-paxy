@@ -1,0 +1,5 @@
+{ 
+    "nr": "898201920230525090050202",
+    "status": 400,
+    "message": "A new book for countryCode CZ cannot be created because such book is open in the system. Number of open book: 898201920230525090050202"
+}

@@ -33,7 +33,7 @@ class PaxyCourierPostShipment implements CourierPostShipment
             $stream = $this->session
                 ->client()
                 ->post(
-                    $this->getPath($booking->getShipmentId()),
+                    $this->getPath((string) $booking->getShipmentId()),
                     []
                 );
 

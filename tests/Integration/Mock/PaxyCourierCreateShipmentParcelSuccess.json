@@ -1,0 +1,8 @@
+{ 
+    "parcel": {
+      "trackingNr": "CP123123123"
+    },
+    "trackingNr": "CP123123123",
+    "status": 200,
+    "message": "Object successfully created"
+}

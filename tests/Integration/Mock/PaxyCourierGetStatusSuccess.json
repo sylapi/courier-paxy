@@ -1,0 +1,12 @@
+{
+    "items": [
+      {
+        "statusCode": "pending",
+        "statusHistory": [
+          {}
+        ]
+      }
+    ],
+    "status": 200,
+    "message": "Object successfully created"
+  }
