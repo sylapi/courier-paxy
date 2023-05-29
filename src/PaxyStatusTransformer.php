@@ -13,6 +13,15 @@ class PaxyStatusTransformer extends StatusTransformer
      * @var array<string, string>
      */
     public $statuses = [
-        'pending'   => StatusType::ENTRY_WAIT,
+        'pending'   => StatusType::NEW,
+        'scanned'   => StatusType::PROCESSING,
+        'sent'   => StatusType::SENT,
+        'transport'   => StatusType::SPEDITION_DELIVERY,
+        'point'   => StatusType::WAREHOUSE_ENTRY,
+        'delivery'   => StatusType::PROCESSING,
+        'unclaimed'   => StatusType::PROCESSING_FAILED,
+        'back'   => StatusType::RETURNED,
+        'notAccepted'   => StatusType::PROCESSING_FAILED,
+        'delivered'   => StatusType::DELIVERED,
     ];
 }
