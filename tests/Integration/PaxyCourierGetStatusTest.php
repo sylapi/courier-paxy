@@ -29,7 +29,7 @@ class PaxyCourierGetStatusTest extends PHPUnitTestCase
 
         $response = $paxyCourierGetStatuses->getStatus('123');
         $this->assertInstanceOf(Status::class, $response);
-        $this->assertEquals((string) $response, StatusType::ENTRY_WAIT);
+        $this->assertEquals((string) $response, StatusType::NEW);
     }
 
     public function testGetStatusFailure()

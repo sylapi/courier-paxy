@@ -9,7 +9,6 @@
         'token'     => 'mytoken',
         'key'  => 'myorganizationid',
         'sandbox'   => true,
-        'dispatch_point_id' => '1234567890',
         'cod' => true,
         'insurance' => false
     ]);

@@ -107,9 +107,9 @@ class PaxyCourierCreateShipment implements CourierCreateShipment
     {
         $data = [
             'bookNr' => $bookNr,
-            'carrierCode' => 'CP',
+            'carrierCode' => $this->session->parameters()->speditionCode,
             'type' => 'parcel',
-            'quantity' => '1',
+            'quantity' => $shipment->getQuantity(),
             'recipientName' => $shipment->getReceiver()->getFullName(),
             'recipientCity' => $shipment->getReceiver()->getCity(),
             'recipientRegion' => '',
