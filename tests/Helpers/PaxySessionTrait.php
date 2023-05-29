@@ -27,6 +27,7 @@ trait PaxySessionTrait
         $parametersMock = $this->createMock(PaxyParameters::class);
         $parametersMock->key = '1234567890';
         $parametersMock->token = '01b307acba4f54f55aafc33bb06bbbf6ca803e9a';
+        $parametersMock->speditionCode = 'econtgr';
 
         $sessionMock = $this->createMock(PaxySession::class);
         $sessionMock->method('client')
