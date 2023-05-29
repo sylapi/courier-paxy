@@ -1,6 +1,6 @@
-# Courier-paxxy
+# courier-paxy
 
-## Methody
+## Methods
 
 ### Init
 
@@ -9,27 +9,9 @@
         'token'     => 'mytoken',
         'key'  => 'myorganizationid',
         'sandbox'   => true,
-        'labelType' => 'normal', //normal lub A6
-        // 'dispatch_point_id' => '1234567890', // lub Adres (dispatch_point)
-        'dispatch_point' => [
-            'street' => 'Street',
-            'building_number' => '2',
-            'city' => 'City',
-            'post_code' => '11-222',
-            'country_code' => 'PL',
-            // 'service' => InpostServices::COURIER_STANDARD,
-            // lub paczkomat
-            // 'service' => InpostServices::LOCKER_STANDARD,
-            // 'target_point' => 'KRA010'
-        ],
-        'cod' => [
-            'amount' => 25.50,
-            'currency' => 'PLN'
-        ],
-        'insurance' => [
-            'amount' => 25.50,
-            'currency' => 'PLN'
-        ]
+        'dispatch_point_id' => '1234567890',
+        'cod' => true,
+        'insurance' => false
     ]);
 ```
 
@@ -83,7 +65,9 @@
         if ($response->hasErrors()) {
             var_dump($response->getFirstError()->getMessage());
         } else {
-            var_dump($response->shipmentId); // Zewnetrzny idetyfikator zamowienia
+            var_dump($response->referenceId);
+            var_dump($response->shipmentId); 
+            var_dump($response->trackingId); 
         }
     } catch (\Exception $e) {
         var_dump($e->getMessage());
@@ -98,13 +82,14 @@
      */
     $booking = $courier->makeBooking();
     $booking->setShipmentId('123456');
+    $booking->setTrackingId('987654');
     try {
         $response = $courier->postShipment($booking);
         if($response->hasErrors()) {
             var_dump($response->getFirstError()->getMessage());
         } else {
-            var_dump($response->shipmentId); // Zewnetrzny idetyfikator zamowienia
-            var_dump($response->trackingId); // Zewnetrzny idetyfikator sledzenia przesylki
+            var_dump($response->shipmentId); 
+            var_dump($response->trackingId); 
         }
     } catch (\Exception $e) {
         var_dump($e->getMessage());
@@ -118,7 +103,7 @@
      * Init Courier
      */
     try {
-        $response = $courier->getStatus('1234567890'); // Zewnetrzny idetyfikator sledzenia przesylki
+        $response = $courier->getStatus('1234567890');
         if($response->hasErrors()) {
             var_dump($response->getFirstError()->getMessage());
         } else {
@@ -137,7 +122,7 @@
      * Init Courier
      */
     try {
-        $response = $courier->getLabel('123456'); // Zewnetrzny idetyfikator zamowienia
+        $response = $courier->getLabel('123456');
         if($response->hasErrors()) {
             var_dump($response->getFirstError()->getMessage());
         } else {
