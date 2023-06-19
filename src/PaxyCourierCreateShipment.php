@@ -114,7 +114,7 @@ class PaxyCourierCreateShipment implements CourierCreateShipment
             'recipientCity' => $shipment->getReceiver()->getCity(),
             'recipientRegion' => '',
             'recipientPostCode' => $shipment->getReceiver()->getZipCode(),
-            'recipientStreet' => $shipment->getSender()->getStreet(),
+            'recipientStreet' => $shipment->getReceiver()->getStreet(),
             'recipientAddressNr' => $shipment->getReceiver()->getHouseNumber().' '.$shipment->getReceiver()->getApartmentNumber(),
             'recipientEmail' =>  $shipment->getReceiver()->getEmail(),
             'recipientTel' => $shipment->getReceiver()->getPhone(),
