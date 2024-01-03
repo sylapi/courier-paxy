@@ -6,15 +6,14 @@ namespace Sylapi\Courier\Paxy;
 
 use Exception;
 use GuzzleHttp\Exception\ClientException;
-use Sylapi\Courier\Contracts\CourierCreateShipment;
-use Sylapi\Courier\Contracts\CourierPostShipment;
+use Sylapi\Courier\Contracts\CourierCreateShipment as CourierCreateShipmentContract;
 use Sylapi\Courier\Contracts\Response as ResponseContract;
 use Sylapi\Courier\Contracts\Shipment;
 use Sylapi\Courier\Entities\Response;
 use Sylapi\Courier\Exceptions\TransportException;
 use Sylapi\Courier\Helpers\ResponseHelper;
 
-class PaxyCourierCreateShipment implements CourierCreateShipment
+class CourierCreateShipment implements CourierCreateShipmentContract
 {
     private $session;
 

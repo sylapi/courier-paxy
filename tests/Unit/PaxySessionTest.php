@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Sylapi\Courier\Paxy\PaxyParameters;
 use Sylapi\Courier\Paxy\PaxySession;
 
-class PaxySessionTest extends PHPUnitTestCase
+class SessionTest extends PHPUnitTestCase
 {
     public function testPaxySessionParameters()
     {

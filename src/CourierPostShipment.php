@@ -10,11 +10,11 @@ use Sylapi\Courier\Contracts\Booking;
 use Sylapi\Courier\Entities\Response;
 use GuzzleHttp\Exception\ClientException;
 use Sylapi\Courier\Helpers\ResponseHelper;
-use Sylapi\Courier\Contracts\CourierPostShipment;
 use Sylapi\Courier\Exceptions\TransportException;
 use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Contracts\CourierPostShipment as CourierPostShipmentContract;
 
-class PaxyCourierPostShipment implements CourierPostShipment
+class CourierPostShipment implements CourierPostShipmentContract
 {
     const API_PATH = '/books/:book/close';
 

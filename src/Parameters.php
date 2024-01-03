@@ -7,7 +7,7 @@ namespace Sylapi\Courier\Paxy;
 use ArrayObject;
 use Sylapi\Courier\Exceptions\ValidateException;
 
-class PaxyParameters extends ArrayObject
+class Parameters extends ArrayObject
 {
 
 

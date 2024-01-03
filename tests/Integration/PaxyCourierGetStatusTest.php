@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
 
 
-class PaxyCourierGetStatusTest extends PHPUnitTestCase
+class CourierGetStatusTest extends PHPUnitTestCase
 {
     use PaxySessionTrait;
 

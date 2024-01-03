@@ -14,7 +14,7 @@ use Sylapi\Courier\Paxy\PaxyCourierCreateShipment;
 use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
 
 
-class PaxyCourierCreateShipmentTest extends PHPUnitTestCase
+class CourierCreateShipmentTest extends PHPUnitTestCase
 {
 
     use PaxySessionTrait;

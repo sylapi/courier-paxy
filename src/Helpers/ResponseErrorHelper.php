@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sylapi\Courier\Paxy;
+namespace Sylapi\Courier\Paxy\Helpers;
 
 use GuzzleHttp\Exception\ClientException;
 
-class PaxyResponseErrorHelper
+class ResponseErrorHelper
 {
     const DEFAULT_MESSAGE = 'Something went wrong!';
 

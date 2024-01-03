@@ -5,7 +5,7 @@ namespace Sylapi\Courier\Paxy\Tests\Unit;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Sylapi\Courier\Paxy\PaxyBooking;
 
-class PaxyBookingTest extends PHPUnitTestCase
+class BookingTest extends PHPUnitTestCase
 {
     public function testValidatorBookingHasShipmentId()
     {

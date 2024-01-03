@@ -5,31 +5,27 @@ declare(strict_types=1);
 namespace Sylapi\Courier\Paxy;
 
 use GuzzleHttp\Client;
+use Sylapi\Courier\Paxy\Entities\Credentials;
 
-class PaxySession
+class Session
 {
-    private $parameters;
+    private $credentials;
     private $client;
     private $token;
     private $key;
 
-    public function __construct(PaxyParameters $parameters)
+    public function __construct(Credentials $credentials)
     {
-        $this->parameters = $parameters;
+        $this->credentials = $credentials;
         $this->client = null;
-        $this->token = $this->parameters->token ?? null;
-        $this->key = $this->parameters->key ?? null;
-    }
-
-    public function parameters(): PaxyParameters
-    {
-        return $this->parameters;
+        $this->token = $this->credentials->getPassword();
+        $this->key = $this->credentials->getLogin();
     }
 
     public function client(): Client
     {
         if (!$this->client) {
-            $this->initializeSession();
+            $this->client = $this->initializeSession();
         }
 
         return $this->client;
@@ -45,15 +41,17 @@ class PaxySession
         return $this->key;
     }
 
-    private function initializeSession(): void
+    private function initializeSession(): Client
     {
         $this->client = new Client([
-            'base_uri' => $this->parameters->apiUrl,
+            'base_uri' => $this->credentials->getApiUrl(),
             'headers'  => [
                 'Content-Type'  => 'application/json',
                 'CL-API-KEY' => $this->key(),
                 'CL-API-TOKEN' => $this->token(),
             ],
         ]);
+
+        return $this->client;
     }
 }

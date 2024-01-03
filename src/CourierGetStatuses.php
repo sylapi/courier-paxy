@@ -6,14 +6,14 @@ namespace Sylapi\Courier\Paxy;
 
 use Exception;
 use GuzzleHttp\Exception\ClientException;
-use Sylapi\Courier\Contracts\CourierGetStatuses;
+use Sylapi\Courier\Contracts\CourierGetStatuses as CourierGetStatusesContract;
 use Sylapi\Courier\Contracts\Status as StatusContract;
 use Sylapi\Courier\Entities\Status;
 use Sylapi\Courier\Enums\StatusType;
 use Sylapi\Courier\Exceptions\TransportException;
 use Sylapi\Courier\Helpers\ResponseHelper;
 
-class PaxyCourierGetStatuses implements CourierGetStatuses
+class CourierGetStatuses implements CourierGetStatusesContract
 {
     private $session;
 

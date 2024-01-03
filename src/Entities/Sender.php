@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sylapi\Courier\Paxy;
+namespace Sylapi\Courier\Paxy\Entities;
 
 use Rakit\Validation\Validator;
-use Sylapi\Courier\Abstracts\Sender;
+use Sylapi\Courier\Abstracts\Sender as SenderAbstract;
 
-class PaxySender extends Sender
+class Sender extends SenderAbstract
 {
     public function validate(): bool
     {

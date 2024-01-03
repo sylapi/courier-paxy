@@ -5,7 +5,7 @@ namespace Sylapi\Courier\Paxy\Tests\Unit;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Sylapi\Courier\Paxy\PaxyParcel;
 
-class PaxyParcelTest extends PHPUnitTestCase
+class ParcelTest extends PHPUnitTestCase
 {
     public function testWidthConvertingCmToMm()
     {

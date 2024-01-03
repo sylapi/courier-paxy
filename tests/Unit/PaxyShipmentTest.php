@@ -8,7 +8,7 @@ use Sylapi\Courier\Paxy\PaxyReceiver;
 use Sylapi\Courier\Paxy\PaxySender;
 use Sylapi\Courier\Paxy\PaxyShipment;
 
-class PaxyShipmentTest extends PHPUnitTestCase
+class ShipmentTest extends PHPUnitTestCase
 {
     public function testNumberOfPackagesIsAlwaysEqualTo1()
     {

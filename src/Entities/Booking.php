@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Sylapi\Courier\Paxy;
+namespace Sylapi\Courier\Paxy\Entities;
 
 use Rakit\Validation\Validator;
-use Sylapi\Courier\Abstracts\Booking;
+use Sylapi\Courier\Abstracts\Booking as BookingAbstract;
 
-class PaxyBooking extends Booking
+class Booking extends BookingAbstract
 {
-    private $trackingId;
+    private string $trackingId;
 
     public function getTrackingId()
     {
         return $this->trackingId;
     }
 
-    public function setTrackingId(string $trackingId): PaxyBooking
+    public function setTrackingId(string $trackingId): self
     {
         $this->trackingId = $trackingId;
 
@@ -26,13 +26,10 @@ class PaxyBooking extends Booking
     public function validate(): bool
     {
         $rules = [
-            'shipmentId'   => 'required',
-            'trackingId'   => 'nullable',
+            'shipmentId' => 'required',
         ];
-
         $data = [
             'shipmentId' => $this->getShipmentId(),
-            'trackingId' => $this->getTrackingId(),
         ];
 
         $validator = new Validator();

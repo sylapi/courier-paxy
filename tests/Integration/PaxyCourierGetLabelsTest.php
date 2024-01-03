@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
 
 
-class PaxyCourierGetLabelsTest extends PHPUnitTestCase
+class CourierGetLabelsTest extends PHPUnitTestCase
 {
     use PaxySessionTrait;
 

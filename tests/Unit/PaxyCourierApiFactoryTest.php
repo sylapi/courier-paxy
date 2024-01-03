@@ -14,7 +14,7 @@ use Sylapi\Courier\Paxy\PaxySession;
 use Sylapi\Courier\Paxy\PaxySessionFactory;
 use Sylapi\Courier\Paxy\PaxyShipment;
 
-class PaxyCourierApiFactoryTest extends PHPUnitTestCase
+class CourierApiFactoryTest extends PHPUnitTestCase
 {
     private $parameters = [
         'token'            => 'token',
