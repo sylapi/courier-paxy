@@ -77,10 +77,9 @@ class CourierCreateShipmentTest extends PHPUnitTestCase
                 'body'   => file_get_contents(__DIR__.'/Mock/PaxyCourierCreateShipmentParcelSuccess.json'),
             ],            
         ]);
+        $this->expectException(TransportException::class);
         $courierCreateShipment = new CourierCreateShipment($sessionMock);
         $courierCreateShipment->createShipment($this->getShipmentMock());
-        
-        $this->expectException(TransportException::class);
     }
 
 
