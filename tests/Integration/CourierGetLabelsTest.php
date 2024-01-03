@@ -4,15 +4,17 @@ namespace Sylapi\Courier\Paxy\Tests;
 
 use Throwable;
 use Sylapi\Courier\Contracts\Label;
+use Sylapi\Courier\Paxy\CourierGetLabels;
+use Sylapi\Courier\Paxy\Entities\LabelType;
 use Sylapi\Courier\Paxy\PaxyCourierGetLabels;
 use Sylapi\Courier\Exceptions\TransportException;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
+use Sylapi\Courier\Paxy\Tests\Helpers\SessionTrait;
 
 
 class CourierGetLabelsTest extends PHPUnitTestCase
 {
-    use PaxySessionTrait;
+    use SessionTrait;
 
     public function testGetLabelSuccess()
     {
@@ -24,9 +26,10 @@ class CourierGetLabelsTest extends PHPUnitTestCase
             ],
         ]);
 
-        $PaxyCourierGetLabels = new PaxyCourierGetLabels($sessionMock);
-
-        $response = $PaxyCourierGetLabels->getLabel('123');
+        
+        $courierGetLabels = new CourierGetLabels($sessionMock);
+        $labelTypeMock = $this->createMock(LabelType::class);
+        $response = $courierGetLabels->getLabel('123', $labelTypeMock);
         $this->assertEquals($response, 'JVBERi0xLjcKOCAwIG9iago8PCAv');
     }
 
@@ -40,12 +43,9 @@ class CourierGetLabelsTest extends PHPUnitTestCase
             ],
         ]);
 
-        $PaxyCourierGetLabels = new PaxyCourierGetLabels($sessionMock);
-        $response = $PaxyCourierGetLabels->getLabel('123');
-        $this->assertInstanceOf(Label::class, $response);
-        $this->assertEquals(null, (string) $response);
-        $this->assertInstanceOf(Throwable::class, $response->getFirstError());
-        $this->assertInstanceOf(TransportException::class, $response->getFirstError());
-        $this->assertEquals('Authentication failed', $response->getFirstError()->getMessage());
+        $courierGetLabels = new CourierGetLabels($sessionMock);
+        $labelTypeMock = $this->createMock(LabelType::class);
+        $this->expectException(TransportException::class);
+        $courierGetLabels->getLabel('123', $labelTypeMock);
     } 
 }

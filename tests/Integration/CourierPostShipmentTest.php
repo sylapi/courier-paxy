@@ -3,22 +3,20 @@
 namespace Sylapi\Courier\Paxy\Tests;
 
 use Throwable;
-use Sylapi\Courier\Paxy\PaxyBooking;
-use Sylapi\Courier\Contracts\Response;
-use Sylapi\Courier\Paxy\PaxyCourierPostShipment;
+use Sylapi\Courier\Paxy\Responses\Parcel as ParcelResponse;
+use Sylapi\Courier\Paxy\Entities\Booking;
+use Sylapi\Courier\Paxy\CourierPostShipment;
 use Sylapi\Courier\Exceptions\TransportException;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
-
+use Sylapi\Courier\Paxy\Tests\Helpers\SessionTrait;
 
 class CourierPostShipmentTest extends PHPUnitTestCase
 {
-    use PaxySessionTrait;
-
+    use SessionTrait;
 
     private function getBookingMock(string $shipmentId, string $trackingId)
     {
-        $bookingMock = $this->createMock(PaxyBooking::class);
+        $bookingMock = $this->createMock(Booking::class);
         $bookingMock->method('getShipmentId')->willReturn($shipmentId);
         $bookingMock->method('getTrackingId')->willReturn($trackingId);
         $bookingMock->method('validate')->willReturn(true);
@@ -36,17 +34,17 @@ class CourierPostShipmentTest extends PHPUnitTestCase
             ],
         ]);
 
-        $PaxyCourierCreateShipment = new PaxyCourierPostShipment($sessionMock);
+        $courierCreateShipment = new CourierPostShipment($sessionMock);
         $shipmentId = (string) 1234567890;
         $trackingId = (string) 987654321;
         $booking = $this->getBookingMock($shipmentId, $trackingId);
-        $response = $PaxyCourierCreateShipment->postShipment($booking);
+        $response = $courierCreateShipment->postShipment($booking);
 
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertNotEmpty($response->shipmentId);
-        $this->assertEquals('1234567890', $response->shipmentId);
-        $this->assertNotEmpty($response->trackingId);
-        $this->assertEquals($response->trackingId, '987654321');
+        $this->assertInstanceOf(ParcelResponse::class, $response);
+        $this->assertNotEmpty($response->getShipmentId());
+        $this->assertEquals('1234567890', $response->getShipmentId());
+        $this->assertNotEmpty($response->getTrackingId());
+        $this->assertEquals($response->getTrackingId(), '987654321');
     }
 
     public function testPostShipmentFailure()
@@ -59,14 +57,11 @@ class CourierPostShipmentTest extends PHPUnitTestCase
             ],
         ]);
 
-        $PaxyCourierCreateShipment = new PaxyCourierPostShipment($sessionMock);
+        $courierCreateShipment = new CourierPostShipment($sessionMock);
         $shipmentId = (string) 1234567890;
         $trackingId = (string) 987654321;
         $booking = $this->getBookingMock($shipmentId, $trackingId);
-        $response = $PaxyCourierCreateShipment->postShipment($booking);
-
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertInstanceOf(Throwable::class, $response->getFirstError());
-        $this->assertInstanceOf(TransportException::class, $response->getFirstError());
+        $this->expectException(TransportException::class);
+        $courierCreateShipment->postShipment($booking);
     }
 }

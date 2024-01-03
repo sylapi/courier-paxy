@@ -5,15 +5,16 @@ namespace Sylapi\Courier\Paxy\Tests;
 use Throwable;
 use Sylapi\Courier\Contracts\Status;
 use Sylapi\Courier\Enums\StatusType;
-use Sylapi\Courier\Paxy\PaxyCourierGetStatuses;
+use Sylapi\Courier\Paxy\CourierGetStatuses;
 use Sylapi\Courier\Exceptions\TransportException;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sylapi\Courier\Paxy\Tests\Helpers\PaxySessionTrait;
+use Sylapi\Courier\Paxy\Tests\Helpers\SessionTrait;
+
 
 
 class CourierGetStatusTest extends PHPUnitTestCase
 {
-    use PaxySessionTrait;
+    use SessionTrait;
 
     public function testGetStatusSuccess()
     {
@@ -25,11 +26,10 @@ class CourierGetStatusTest extends PHPUnitTestCase
             ],
         ]);
 
-        $paxyCourierGetStatuses = new PaxyCourierGetStatuses($sessionMock);
+        $courierGetStatuses = new CourierGetStatuses($sessionMock);
 
-        $response = $paxyCourierGetStatuses->getStatus('123');
-        $this->assertInstanceOf(Status::class, $response);
-        $this->assertEquals((string) $response, StatusType::NEW);
+        $response = $courierGetStatuses->getStatus('123');
+        $this->assertEquals($response, StatusType::NEW->value);
     }
 
     public function testGetStatusFailure()
@@ -42,11 +42,8 @@ class CourierGetStatusTest extends PHPUnitTestCase
             ],
         ]);
 
-        $PaxyCourierGetStatuses = new PaxyCourierGetStatuses($sessionMock);
-        $response = $PaxyCourierGetStatuses->getStatus('123');
-        $this->assertInstanceOf(Status::class, $response);
-        $this->assertEquals(StatusType::APP_RESPONSE_ERROR, (string) $response);
-        $this->assertInstanceOf(Throwable::class, $response->getFirstError());
-        $this->assertInstanceOf(TransportException::class, $response->getFirstError());
+        $this->expectException(TransportException::class);
+        $courierGetStatuses = new CourierGetStatuses($sessionMock);
+        $courierGetStatuses->getStatus('123');
     }
 }

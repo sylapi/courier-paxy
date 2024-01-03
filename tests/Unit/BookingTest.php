@@ -2,22 +2,22 @@
 
 namespace Sylapi\Courier\Paxy\Tests\Unit;
 
+use Sylapi\Courier\Paxy\Entities\Booking;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sylapi\Courier\Paxy\PaxyBooking;
 
 class BookingTest extends PHPUnitTestCase
 {
     public function testValidatorBookingHasShipmentId()
     {
         $value = '1234567890';
-        $booking = new PaxyBooking();
+        $booking = new Booking();
         $booking->setShipmentId($value);
         $this->assertTrue($booking->validate());
     }
 
     public function testValidatorBookingHasNotShipmentId()
     {
-        $booking = new PaxyBooking();
+        $booking = new Booking();
         $this->assertFalse($booking->validate());
     }
 }

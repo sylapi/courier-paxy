@@ -2,18 +2,18 @@
 
 namespace Sylapi\Courier\Paxy\Tests\Unit;
 
+use Sylapi\Courier\Paxy\Entities\Parcel;
+use Sylapi\Courier\Paxy\Entities\Sender;
+use Sylapi\Courier\Paxy\Entities\Receiver;
+use Sylapi\Courier\Paxy\Entities\Shipment;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sylapi\Courier\Paxy\PaxyParcel;
-use Sylapi\Courier\Paxy\PaxyReceiver;
-use Sylapi\Courier\Paxy\PaxySender;
-use Sylapi\Courier\Paxy\PaxyShipment;
 
 class ShipmentTest extends PHPUnitTestCase
 {
     public function testNumberOfPackagesIsAlwaysEqualTo1()
     {
-        $parcel = new PaxyParcel();
-        $shipment = new PaxyShipment();
+        $parcel = new Parcel();
+        $shipment = new Shipment();
         $shipment->setParcel($parcel);
         $shipment->setParcel($parcel);
 
@@ -22,11 +22,11 @@ class ShipmentTest extends PHPUnitTestCase
 
     public function testShipmentValidate()
     {
-        $receiver = new PaxyReceiver();
-        $sender = new PaxySender();
-        $parcel = new PaxyParcel();
+        $receiver = new Receiver();
+        $sender = new Sender();
+        $parcel = new Parcel();
 
-        $shipment = new PaxyShipment();
+        $shipment = new Shipment();
         $shipment->setSender($sender)
             ->setReceiver($receiver)
             ->setParcel($parcel);
