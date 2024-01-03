@@ -6,11 +6,12 @@ namespace Sylapi\Courier\Paxy;
 
 use Exception;
 use GuzzleHttp\Exception\ClientException;
-use Sylapi\Courier\Contracts\CourierGetLabels as CourierGetLabelsContract;
-use Sylapi\Courier\Contracts\Label as LabelContract;
-use Sylapi\Courier\Entities\Label;
 use Sylapi\Courier\Exceptions\TransportException;
-use Sylapi\Courier\Helpers\ResponseHelper;
+use Sylapi\Courier\Paxy\Helpers\ResponseErrorHelper;
+use Sylapi\Courier\Paxy\Responses\Label as LabelResponse;
+use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Contracts\LabelType as LabelTypeContract;
+use Sylapi\Courier\Contracts\CourierGetLabels as CourierGetLabelsContract;
 
 class CourierGetLabels implements CourierGetLabelsContract
 {
@@ -18,12 +19,12 @@ class CourierGetLabels implements CourierGetLabelsContract
 
     private $session;
 
-    public function __construct(PaxySession $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
-    public function getLabel(string $trackingId): LabelContract
+    public function getLabel(string $trackingId, LabelTypeContract $labelType): ResponseContract
     {
         try {
             $stream = $this->session
@@ -40,19 +41,12 @@ class CourierGetLabels implements CourierGetLabelsContract
 
             $result = $stream->getBody()->getContents();
 
-            return new Label((string) $result);
+            return new LabelResponse((string) $result);
+
         } catch (ClientException $e) {
-            $exception = new TransportException(PaxyResponseErrorHelper::message($e));
-            $label = new Label(null);
-            ResponseHelper::pushErrorsToResponse($label, [$exception]);
-
-            return $label;
+            throw new TransportException(ResponseErrorHelper::message($e));
         } catch (Exception $e) {
-            $exception = new TransportException($e->getMessage(), $e->getCode());
-            $label = new Label(null);
-            ResponseHelper::pushErrorsToResponse($label, [$exception]);
-
-            return $label;
+            throw  new TransportException($e->getMessage(), $e->getCode());
         }
     }
 }

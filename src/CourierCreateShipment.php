@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Sylapi\Courier\Paxy;
 
 use Exception;
-use GuzzleHttp\Exception\ClientException;
-use Sylapi\Courier\Contracts\CourierCreateShipment as CourierCreateShipmentContract;
-use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Paxy\Session;
 use Sylapi\Courier\Contracts\Shipment;
-use Sylapi\Courier\Entities\Response;
+use GuzzleHttp\Exception\ClientException;
+use Sylapi\Courier\Paxy\Entities\Booking;
 use Sylapi\Courier\Exceptions\TransportException;
-use Sylapi\Courier\Helpers\ResponseHelper;
+use Sylapi\Courier\Paxy\Helpers\ResponseErrorHelper;
+use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Paxy\Responses\Shipment as ShipmentResponse;
+use Sylapi\Courier\Contracts\CourierCreateShipment as CourierCreateShipmentContract;
 
 class CourierCreateShipment implements CourierCreateShipmentContract
 {
@@ -20,39 +22,39 @@ class CourierCreateShipment implements CourierCreateShipmentContract
     const API_BOOKS = '/books';
     const API_PARCELS = '/parcels';
 
-    public function __construct(PaxySession $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
     public function createShipment(Shipment $shipment): ResponseContract
     {
-        $response = new Response();
+        $response = new ShipmentResponse();
 
         $bookNr = null;
         $trackingNr = null;
 
         try {
             $bookNr = $this->createBook($this->getBook($shipment));
-            $response->referenceId = $bookNr;
+            
             $trackingNr = $this->createParcel($this->getParcel($bookNr, $shipment));
-            $response->referenceId = $bookNr;
 
-            $response->shipmentId = $bookNr;
-            $response->trackingId = $trackingNr;
+            $response->setResponse($response);
+            $response->setReferenceId((string) $bookNr);
+            $response->setShipmentId((string) $bookNr);
+            $response->setTrackingId((string) $trackingNr);
+            return $response;
+
         } catch (ClientException $e) {
-            $exception = new TransportException(PaxyResponseErrorHelper::message($e));
-            ResponseHelper::pushErrorsToResponse($response, [$exception]);
+
             if($bookNr) {
                 $this->closeBook($bookNr);
             }
-            return $response;
+            throw new TransportException(ResponseErrorHelper::message($e));
         } catch (Exception $e) {
-            $exception = new TransportException($e->getMessage(), $e->getCode());
-            ResponseHelper::pushErrorsToResponse($response, [$exception]);
+            throw new TransportException($e->getMessage(), $e->getCode());
+            
         }
-
-        return $response;
     }
 
     private function createBook(array $request) : string
@@ -104,9 +106,11 @@ class CourierCreateShipment implements CourierCreateShipmentContract
 
     private function getParcel(string $bookNr, Shipment $shipment): array
     {
+        $options = $shipment->getOptions();
+
         $data = [
             'bookNr' => $bookNr,
-            'carrierCode' => $this->session->parameters()->speditionCode,
+            'carrierCode' => $options->get('speditionCode'),
             'type' => 'parcel',
             'quantity' => $shipment->getQuantity(),
             'recipientName' => $shipment->getReceiver()->getFullName(),
@@ -127,6 +131,8 @@ class CourierCreateShipment implements CourierCreateShipmentContract
             'externalNr' => ''
         ];
 
+        //TODO:
+        /*
         if ($this->session->parameters()->hasProperty('cod') && is_array($this->session->parameters()->cod)) {
             $data['cod'] = (int) $this->session->parameters()->cod;
         }
@@ -134,14 +140,15 @@ class CourierCreateShipment implements CourierCreateShipmentContract
         if ($this->session->parameters()->hasProperty('insurance') && is_array($this->session->parameters()->insurance)) {
             $data['insurance'] = (int)  $this->session->parameters()->insurance;
         }
+        */
 
         return $data;
     }
 
     private function closeBook($bookNr)
     {
-        $postShipment = new PaxyCourierPostShipment($this->session);
-        $booking = new PaxyBooking;
+        $postShipment = new CourierPostShipment($this->session);
+        $booking = new Booking;
         $booking->setShipmentId($bookNr);
         $postShipment->postShipment($booking);
     }

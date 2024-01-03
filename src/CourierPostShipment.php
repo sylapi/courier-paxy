@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Sylapi\Courier\Paxy;
 
 use Exception;
-use Sylapi\Courier\Paxy\PaxyBooking;
+use Sylapi\Courier\Paxy\Entities\Booking as PaxyBooking;
 use Sylapi\Courier\Contracts\Booking;
-use Sylapi\Courier\Entities\Response;
 use GuzzleHttp\Exception\ClientException;
 use Sylapi\Courier\Helpers\ResponseHelper;
 use Sylapi\Courier\Exceptions\TransportException;
+use Sylapi\Courier\Paxy\Helpers\ResponseErrorHelper;
 use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Paxy\Responses\Parcel as ParcelResponse;
 use Sylapi\Courier\Contracts\CourierPostShipment as CourierPostShipmentContract;
 
 class CourierPostShipment implements CourierPostShipmentContract
@@ -20,14 +21,14 @@ class CourierPostShipment implements CourierPostShipmentContract
 
     private $session;
 
-    public function __construct(PaxySession $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
     public function postShipment(Booking $booking): ResponseContract
     {
-        $response = new Response();
+        $response = new ParcelResponse();
 
         try {
             $stream = $this->session
@@ -43,22 +44,21 @@ class CourierPostShipment implements CourierPostShipmentContract
                 throw new Exception('Json data is incorrect');
             }
 
-            $response->shipmentId = $booking->getShipmentId();
+            $response->setShipmentId($booking->getShipmentId());
             /**
              * @var PaxyBooking $booking
              */
-            $response->trackingId = $booking->getTrackingId();
-        } catch (ClientException $e) {
-            $exception = new TransportException(PaxyResponseErrorHelper::message($e));
-            ResponseHelper::pushErrorsToResponse($response, [$exception]);
+            $response->setTrackingId($booking->getTrackingId());
 
             return $response;
+
+        } catch (ClientException $e) {
+            throw new TransportException(ResponseErrorHelper::message($e));
         } catch (Exception $e) {
-            $exception = new TransportException($e->getMessage(), $e->getCode());
-            ResponseHelper::pushErrorsToResponse($response, [$exception]);
+            throw new TransportException($e->getMessage(), $e->getCode());
         }
 
-        return $response;
+        
     }
 
     private function getPath(string $value)

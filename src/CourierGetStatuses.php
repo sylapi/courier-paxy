@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Sylapi\Courier\Paxy;
 
 use Exception;
-use GuzzleHttp\Exception\ClientException;
-use Sylapi\Courier\Contracts\CourierGetStatuses as CourierGetStatusesContract;
-use Sylapi\Courier\Contracts\Status as StatusContract;
-use Sylapi\Courier\Entities\Status;
+use Sylapi\Courier\Paxy\Responses\Status as StatusResponse;
 use Sylapi\Courier\Enums\StatusType;
+use GuzzleHttp\Exception\ClientException;
+use Sylapi\Courier\Paxy\StatusTransformer;
 use Sylapi\Courier\Exceptions\TransportException;
-use Sylapi\Courier\Helpers\ResponseHelper;
+use Sylapi\Courier\Paxy\Helpers\ResponseErrorHelper;
+use Sylapi\Courier\Contracts\Response as ResponseContract;
+use Sylapi\Courier\Contracts\CourierGetStatuses as CourierGetStatusesContract;
 
 class CourierGetStatuses implements CourierGetStatusesContract
 {
@@ -19,12 +20,12 @@ class CourierGetStatuses implements CourierGetStatusesContract
 
     const API_PATH = '/trackings';
 
-    public function __construct(PaxySession $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
-    public function getStatus(string $trackingId): StatusContract
+    public function getStatus(string $trackingId): ResponseContract
     {
         try {
             $stream = $this->session
@@ -48,19 +49,11 @@ class CourierGetStatuses implements CourierGetStatusesContract
         
             $status = $result->items[0]->statusCode ?? StatusType::APP_RESPONSE_ERROR;
 
-            return new Status((string) new PaxyStatusTransformer((string) $status));
+            return new StatusResponse((string) new StatusTransformer((string) $status));
         } catch (ClientException $e) {
-            $exception = new TransportException(PaxyResponseErrorHelper::message($e));
-            $status = new Status(StatusType::APP_RESPONSE_ERROR);
-            ResponseHelper::pushErrorsToResponse($status, [$exception]);
-
-            return $status;
+            throw new TransportException(ResponseErrorHelper::message($e));
         } catch (Exception $e) {
-            $exception = new TransportException($e->getMessage(), $e->getCode());
-            $status = new Status(StatusType::APP_RESPONSE_ERROR);
-            ResponseHelper::pushErrorsToResponse($status, [$exception]);
-
-            return $status;
+            throw  new TransportException($e->getMessage(), $e->getCode());
         }
     }
 
