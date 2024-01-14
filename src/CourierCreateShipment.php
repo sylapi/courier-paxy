@@ -11,9 +11,9 @@ use GuzzleHttp\Exception\ClientException;
 use Sylapi\Courier\Paxy\Entities\Booking;
 use Sylapi\Courier\Exceptions\TransportException;
 use Sylapi\Courier\Paxy\Helpers\ResponseErrorHelper;
-use Sylapi\Courier\Contracts\Response as ResponseContract;
 use Sylapi\Courier\Paxy\Responses\Shipment as ShipmentResponse;
 use Sylapi\Courier\Contracts\CourierCreateShipment as CourierCreateShipmentContract;
+use Sylapi\Courier\Responses\Shipment as ResponseShipment;
 
 class CourierCreateShipment implements CourierCreateShipmentContract
 {
@@ -27,7 +27,7 @@ class CourierCreateShipment implements CourierCreateShipmentContract
         $this->session = $session;
     }
 
-    public function createShipment(Shipment $shipment): ResponseContract
+    public function createShipment(Shipment $shipment): ResponseShipment
     {
         $response = new ShipmentResponse();
 
@@ -131,16 +131,14 @@ class CourierCreateShipment implements CourierCreateShipmentContract
             'externalNr' => ''
         ];
 
-        //TODO:
-        /*
-        if ($this->session->parameters()->hasProperty('cod') && is_array($this->session->parameters()->cod)) {
-            $data['cod'] = (int) $this->session->parameters()->cod;
+        $services = $shipment->getServices();
+        
+        if($services) {
+            foreach($services as $service) {
+                $service->setRequest($data);
+                $data = $service->handle();
+            }
         }
-
-        if ($this->session->parameters()->hasProperty('insurance') && is_array($this->session->parameters()->insurance)) {
-            $data['insurance'] = (int)  $this->session->parameters()->insurance;
-        }
-        */
 
         return $data;
     }
