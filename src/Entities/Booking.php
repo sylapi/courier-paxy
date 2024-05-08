@@ -9,14 +9,14 @@ use Sylapi\Courier\Abstracts\Booking as BookingAbstract;
 
 class Booking extends BookingAbstract
 {
-    private string $trackingId;
+    private ?string $trackingId;
 
-    public function getTrackingId()
+    public function getTrackingId(): ?string
     {
         return $this->trackingId;
     }
 
-    public function setTrackingId(string $trackingId): self
+    public function setTrackingId(?string $trackingId): self
     {
         $this->trackingId = $trackingId;
 

@@ -48,7 +48,7 @@ class CourierCreateShipment implements CourierCreateShipmentContract
         } catch (ClientException $e) {
 
             if($bookNr) {
-                $this->closeBook($bookNr);
+                $this->closeBook($bookNr, $trackingNr);
             }
             throw new TransportException(ResponseErrorHelper::message($e));
         } catch (Exception $e) {
@@ -106,11 +106,15 @@ class CourierCreateShipment implements CourierCreateShipmentContract
 
     private function getParcel(string $bookNr, Shipment $shipment): array
     {
+
+        /**
+         * @var \Sylapi\Courier\Paxy\Entities\Options $options 
+         */
         $options = $shipment->getOptions();
 
         $data = [
             'bookNr' => $bookNr,
-            'carrierCode' => $options->get('speditionCode'),
+            'carrierCode' => $options->getShippingType(),
             'type' => 'parcel',
             'quantity' => $shipment->getQuantity(),
             'recipientName' => $shipment->getReceiver()->getFullName(),
@@ -143,11 +147,12 @@ class CourierCreateShipment implements CourierCreateShipmentContract
         return $data;
     }
 
-    private function closeBook($bookNr)
+    private function closeBook(?string $bookNr, ?string $trackingNr):void
     {
         $postShipment = new CourierPostShipment($this->session);
         $booking = new Booking;
         $booking->setShipmentId($bookNr);
+        $booking->setTrackingId($trackingNr);
         $postShipment->postShipment($booking);
     }
 }
