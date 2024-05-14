@@ -8,7 +8,6 @@
 
 ### PostShipment
 
-
 ## Komendy
 
 | KOMENDA | OPIS |
